@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+
+        .collapsible {
+            background-color: #FFF;
+            color: black;
+            cursor: pointer;
+            padding: 5px;
+            width: 85%;
+            border: #FFF;
+            text-align: left;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .active, .collapsible:hover {
+            background-color: #FFF;
+        }
+
+        .collapsible:after {
+          content: '\002B';
+          color: black;
+          font-weight: bold;
+          float: right;
+          margin-left: 5px;
+        }
+
+        .active:after {
+          content: "\2212";
+        }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #FFF;
+        }
+        </style>
+        <title></title>
+    </head>
+
+    <body>
+        <div id="map">    
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet.wms.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/Nederlandparkeergarages_2.js"></script>
+        <script src="data/Utrechtparkeerplattegrond_3.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+        <script>
+        var highlightLayer;
+
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[51.68652864008266,5.72383500708404],[52.01401639895523,6.0778399933956715]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="http://leafletjs.com" title="A JS library for interactive maps">Leaflet</a>');
+        var bounds_group = new L.featureGroup([]);
+
+        function setBounds() {
+        }
+        var layer_NijmegenParkeergarages_0 = L.WMS.layer("https://services.nijmegen.nl/geoservices/extern_OpenData/ows", "extern_kaartviewer_Parkeergarages", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Nijmegenparkeerterreinen_1 = L.WMS.layer("https://services.nijmegen.nl/geoservices/extern_OpenData/ows", "extern_kaartviewer_Parkeerterreinen", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        function pop_Nederlandparkeergarages_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+        }
+
+        function style_Nederlandparkeergarages_2_0() {
+            return {
+                pane: 'pane_Nederlandparkeergarages_2',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(34,6,217,1.0)',
+            }
+        }
+        map.createPane('pane_Nederlandparkeergarages_2');
+        map.getPane('pane_Nederlandparkeergarages_2').style.zIndex = 402;
+        map.getPane('pane_Nederlandparkeergarages_2').style['mix-blend-mode'] = 'normal';
+        var layer_Nederlandparkeergarages_2 = new L.geoJson(json_Nederlandparkeergarages_2, {
+            attribution: '',
+            pane: 'pane_Nederlandparkeergarages_2',
+            onEachFeature: pop_Nederlandparkeergarages_2,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Nederlandparkeergarages_2_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Nederlandparkeergarages_2);
+        function pop_Utrechtparkeerplattegrond_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+        }
+
+        function style_Utrechtparkeerplattegrond_3_0() {
+            return {
+                pane: 'pane_Utrechtparkeerplattegrond_3',
+                radius: 4.0,
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1,
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(34,6,217,1.0)',
+            }
+        }
+        map.createPane('pane_Utrechtparkeerplattegrond_3');
+        map.getPane('pane_Utrechtparkeerplattegrond_3').style.zIndex = 403;
+        map.getPane('pane_Utrechtparkeerplattegrond_3').style['mix-blend-mode'] = 'normal';
+        var layer_Utrechtparkeerplattegrond_3 = new L.geoJson(json_Utrechtparkeerplattegrond_3, {
+            attribution: '',
+            pane: 'pane_Utrechtparkeerplattegrond_3',
+            onEachFeature: pop_Utrechtparkeerplattegrond_3,
+            pointToLayer: function (feature, latlng) {
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style_Utrechtparkeerplattegrond_3_0(feature));
+            },
+        });
+        bounds_group.addLayer(layer_Utrechtparkeerplattegrond_3);
+        
+        var layer_Parkeerplaatsengeschiktzonnedak_4 = L.WMS.layer("https://geoservices.zuid-holland.nl/arcgis/services/Ruimte/Zonnewijzer/MapServer/WmsServer", "Voorkeurslocaties - Parkeerplaatsen geschikt zonnedak", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Overijselasbestinventarisatievanbedrijventerreinen_5 = L.WMS.layer("https://services.geodataoverijssel.nl/geoserver/B41_bodem/wms", "B4_Asbestinventarisatie_van_bedrijventerreinen", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Overijselasbestinventarisatievandaken_6 = L.WMS.layer("https://services.geodataoverijssel.nl/geoserver/B41_bodem/wms", "B41_Asbestinventarisatie_van_daken", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Overijselasbestlocatiesperbouwperiode_7 = L.WMS.layer("https://services.geodataoverijssel.nl/geoserver/B41_bodem/wms", "B4_Asbestlocaties_in_Overijssel", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Overijselasbestsignaleringskaart_8 = L.WMS.layer("https://services.geodataoverijssel.nl/geoserver/B41_bodem/wms", "B4_Asbestsignaleringskaart", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Zaanstadasbestlocaties_9 = L.WMS.layer("https://geo.zaanstad.nl/geoserver/wms?SERVICE=WMS", "geo:hbb_asbestkansenkaart", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Gelderlandasbestkansenkaart_10 = L.WMS.layer("https://geoserver.prvgld.nl/geoserver/PGR_B/wms", "pgr_MiBo_Asbest_invent_P", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Gelderlandasbestinventarisatie_11 = L.WMS.layer("https://geoserver.prvgld.nl/geoserver/PGR_B/wms", "pgr_MiBo_Asbest_invent_V", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Zeelandasbestlocaties_12 = L.WMS.layer("https://opengeodata.zeeland.nl/geoserver/bodem/wms", "geonam_asbsanpnt", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Zonatlas_13 = L.WMS.layer("http://geodata.zonatlas.nl/mapproxy/service", "nea", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_Grotedakenmeerdan180panelen_14 = L.WMS.layer("https://geoservices.zuid-holland.nl/arcgis/services/Ruimte/Zonnewijzer/MapServer/WmsServer", "Grote daken [meer dan 180 panelen]", {
+            format: 'image/png',
+            uppercase: true,
+            transparent: true,
+            continuousWorld : true,
+            tiled: true,
+            info_format: 'text/html',
+            opacity: 1,
+            identify: false,
+            attribution: '',
+        });
+        var layer_ESRIStreets_15 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            opacity: 0.346,
+            attribution: '',
+        });
+        layer_ESRIStreets_15;
+        map.addLayer(layer_ESRIStreets_15);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,
+            {"ESRI Streets <br> <br> <b>Zonnepannelen</b>": layer_ESRIStreets_15,
+
+            '<button class="collapsible"> Grote Daken [Meer dan 180 panelen] </button> <div class="content"> <img src="legend/GroteDaken.png">':layer_Grotedakenmeerdan180panelen_14,
+            "&nbsp Zonatlas <br> <br> <b>Asbest</b> <br> &nbsp &nbsp &nbsp <b>Zeeland</b> ": layer_Zonatlas_13, 
+
+
+            "&nbsp Asbestlocaties <br> &nbsp &nbsp &nbsp <b>Gelderland</b>": layer_Zeelandasbestlocaties_12,
+
+            '<button class="collapsible"> Asbestinventarisatie </button> <div class="content"> <img src="legend/Gelderland_Asbestinventarisatie.png">':layer_Gelderlandasbestinventarisatie_11,
+
+            "&nbsp Asbestkansenkaart <br> &nbsp &nbsp &nbsp <b>Zaanstad</b>": layer_Gelderlandasbestkansenkaart_10,
+
+            '<button class="collapsible"> Asbestlocaties </button> <div class="content"> <img src="legend/Zaanstad_Asbestlocaties.png"> </div> <br> &nbsp &nbsp &nbsp <b>Overijsel</b>':layer_Zaanstadasbestlocaties_9,
+
+            '<button class="collapsible"> Asbestsignaleringskaart </button> <div class="content"> <img src="legend/Overijsel_Asbestsignaliseringskaart.png">':layer_Overijselasbestsignaleringskaart_8,
+
+             '<button class="collapsible"> Asbestlocaties per bouwperiode </button> <div class="content"> <img src="legend/Overijsel_AsbestlocatiesPerBouwperiode.png">':layer_Overijselasbestlocatiesperbouwperiode_7,
+
+             '<button class="collapsible"> Asbestinventarisatie van daken </button> <div class="content"> <img src="legend/Overijsel_AsbestinventarisatieVanDaken.png">':layer_Overijselasbestinventarisatievandaken_6,
+
+            '<button class="collapsible"> Asbestinventarisatie van bedrijventerreinen </button> <div class="content"> <img src="legend/Overijsel_AsbestinventarisatieBedrijventerreinen.png"> </div> <br> <br> &nbsp &nbsp &nbsp <b>Parkeerplaatsen</b>': layer_Overijselasbestinventarisatievanbedrijventerreinen_5,
+
+            "Parkeerplaatsen geschikt zonnedak": layer_Parkeerplaatsengeschiktzonnedak_4,
+            "Utrecht parkeerplattegrond": layer_Utrechtparkeerplattegrond_3,
+            "Nederland parkeergarages": layer_Nederlandparkeergarages_2,
+            "Nijmegen parkeerterreinen": layer_Nijmegenparkeerterreinen_1,
+            "Nijmegen Parkeergarages": layer_NijmegenParkeergarages_0,},).addTo(map);
+        setBounds();
+     
+        </script>
+
+        <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+        </script>
+
+    </body>
+</html>
